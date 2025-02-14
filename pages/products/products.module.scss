@@ -1,0 +1,89 @@
+/* CSS (products.module.scss) */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+.title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.searchBox {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.productList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.productCard {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    background: #fff;
+    transition: transform 0.3s ease;
+}
+.productCard:hover {
+    transform: scale(1.02);
+}
+.productImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+.productDetails {
+    flex-grow: 1;
+}
+.productTitle {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+.productPrice {
+    color: #28a745;
+    font-size: 16px;
+    font-weight: bold;
+}
+.productNote {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+.quantitySelect {
+    width: 100%;
+    padding: 5px;
+}
+.orderButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+.orderButton:hover {
+    background: #0056b3;
+}
+
+@media (max-width: 600px) {
+    .productCard {
+        flex-direction: column;
+        align-items: center;
+    }
+    .productImage {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 10px;
+    }
+}
