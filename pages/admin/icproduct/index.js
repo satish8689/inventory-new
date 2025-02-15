@@ -4,13 +4,13 @@ import styles from './icproduct.module.scss';
 import { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Resizer from 'react-image-file-resizer';
-
+import { useRouter } from 'next/navigation';
 export default function Admin() {
     const [products, setProducts] = useState([]);
     const [form, setForm] = useState({ title: '', image_url: '' });
     const [error, setError] = useState('');
     const [editingId, setEditingId] = useState(null);
-    
+    const router = useRouter();
     async function getProduct(){
         let result = await fetch('/api/ic_product');
         let res = await result.json();
@@ -18,9 +18,13 @@ export default function Admin() {
             setProducts(res);
         }
     }
-
     useEffect(() => {
-        getProduct();
+        const isAuthenticated = localStorage.getItem('admin_code');
+        if (!isAuthenticated) {
+            router.push('/admin');
+        } else {
+            getProduct();
+        }
     }, []);
 
     const handleChange = (e) => {
@@ -32,8 +36,8 @@ export default function Admin() {
         if (file) {
             Resizer.imageFileResizer(
                 file,
-                150, // maxWidth
-                150, // maxHeight
+                100, // maxWidth
+                100, // maxHeight
                 'JPEG', // format
                 100, // quality
                 0, // rotation
@@ -49,11 +53,12 @@ export default function Admin() {
         e.preventDefault();
         const method = editingId ? 'PUT' : 'POST';
         const url = '/api/ic_product';
-        form.id = editingId ? editingId: '';
+        console.log("form", form, editingId)
+        const payload = editingId ? { ...form, id: editingId } : form;
         const res = await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form),
+            body: JSON.stringify(payload),
         });
         if (res.ok) {
             getProduct();

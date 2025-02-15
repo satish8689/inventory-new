@@ -3,11 +3,13 @@
 import styles from './shopproduct.module.scss';
 import { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
 
 export default function Admin() {
     const [shops, setShops] = useState([]);
     const [products, setProducts] = useState([]);
      const [icProducts, setIcProducts] = useState([]);
+     const router = useRouter();
      const [form, setForm] = useState({ 
         shop_id: 0, 
         product_id: 0, 
@@ -21,8 +23,19 @@ export default function Admin() {
     const [editingId, setEditingId] = useState(null);
 
     const weightOptions = [
-        "100g", "200g", "500g", "1kg", "2kg", "5kg", "10kg", "15kg", "20kg", "30kg", "40kg", "50kg"
+        "100gm", "200gm", "500gm", "1kg", "2kg", "5kg", "10kg", "15kg", "20kg", "30kg", "40kg", "50kg"
     ];
+
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem('admin_code');
+        if (!isAuthenticated) {
+            router.push('/admin');
+        } else {
+            getShop();
+            getIcProducts();
+            getProducts();
+        }
+    }, []);
 
     async function getShop() {
         let result = await fetch('/api/shop');
@@ -48,11 +61,7 @@ export default function Admin() {
         }
     }
 
-    useEffect(() => {
-        getShop();
-        getIcProducts();
-        getProducts();
-    }, []);
+    
 
     useEffect(() => {
         setForm(prevForm => ({ ...prevForm, position: products?.length || 0 }));

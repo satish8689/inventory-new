@@ -1,121 +1,77 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import CryptoJS from 'crypto-js';
+import styles from './indexadmin.module.scss';
 
 export default function Admin() {
-    const [products, setProducts] = useState([]);
-    const [form, setForm] = useState({ shop_id: '', ic_product_id: '', price: '', note: '', desc: '', position: '' });
-    const [editingId, setEditingId] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [password, setPassword] = useState('');
+    const [showPopup, setShowPopup] = useState(true);
+
+    const SECRET_KEY = 'mySecretKey'; // Use a better secret key in production
+    const VALID_PASSWORD = '567890';
 
     useEffect(() => {
-        console.log("calling")
-        // fetch('/api/shop_products')
-        //     .then((res) => res.json())
-        //     .then((data) => setProducts(data))
-        //     .catch((err)=>{
-        //         console.log("---------->error", err)
-        //     });
+        const encryptedCode = localStorage.getItem('admin_code');
+        if (encryptedCode) {
+            const decryptedBytes = CryptoJS.AES.decrypt(encryptedCode, SECRET_KEY);
+            const decryptedCode = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            
+            if (decryptedCode === VALID_PASSWORD) {
+                setIsAuthenticated(true);
+                setShowPopup(false);
+            }
+        }
     }, []);
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const handleSubmit = () => {
+        if (password === VALID_PASSWORD) {
+            const encryptedCode = CryptoJS.AES.encrypt(password, SECRET_KEY).toString();
+            localStorage.setItem('admin_code', encryptedCode);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const method =  'POST';
-        const url ='/api/shop';
+            setIsAuthenticated(true);
+            setShowPopup(false);
 
-        console.log("form", form)
-        // const bodyData = {
-
-        // }
-        // const res = await fetch(url, {
-        //     method,
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(form),
-        // });
-
-        // if (res.ok) {
-        //     const updatedProducts = await res.json();
-        //     setProducts(updatedProducts);
-        //     setForm({ shop_id: '', ic_product_id: '', price: '', note: '', desc: '', position: '' });
-        //     setEditingId(null);
-        // }
-
-        // e.preventDefault();
-        // const method = editingId ? 'PUT' : 'POST';
-        // const url = editingId ? `/api/shop_products/${editingId}` : '/api/shop_products';
-
-        // const res = await fetch(url, {
-        //     method,
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(form),
-        // });
-
-        // if (res.ok) {
-        //     const updatedProducts = await res.json();
-        //     setProducts(updatedProducts);
-        //     setForm({ shop_id: '', ic_product_id: '', price: '', note: '', desc: '', position: '' });
-        //     setEditingId(null);
-        // }
-    };
-
-    const handleEdit = (product) => {
-        setForm(product);
-        setEditingId(product.id);
-    };
-
-    const handleDelete = async (id) => {
-        const res = await fetch(`/api/shop_products/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-            setProducts(products.filter((p) => p.id !== id));
+            // Auto remove after 60 minutes
+            setTimeout(() => {
+                localStorage.removeItem('admin_code');
+                setIsAuthenticated(false);
+                setShowPopup(true);
+            }, 60 * 60 * 1000);
+        } else {
+            alert('Invalid Code! Try Again.');
         }
     };
 
+    if (!isAuthenticated && showPopup) {
+        return (
+            <div className={styles.popupOverlay}>
+                <div className={styles.popupContent}>
+                    <h2>Enter Admin Code</h2>
+                    <input 
+                        type="password" 
+                        className={styles.input} 
+                        placeholder="Enter Code" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                    />
+                    <button className={styles.submitButton} onClick={handleSubmit}>Submit</button>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="p-4">
-            <h1 className="text-xl font-bold">Manage Shop Products</h1>
-            <form onSubmit={handleSubmit} className="space-y-2 p-4 border rounded-md">
-                <input name="shop_id" placeholder="Shop ID" value={form.shop_id} onChange={handleChange} required />
-                <input name="ic_product_id" placeholder="Product ID" value={form.ic_product_id} onChange={handleChange} required />
-                <input name="price" placeholder="Price" value={form.price} onChange={handleChange} required />
-                <input name="note" placeholder="Note" value={form.note} onChange={handleChange} />
-                <input name="desc" placeholder="Description" value={form.desc} onChange={handleChange} />
-                <input name="position" placeholder="Position" value={form.position} onChange={handleChange} />
-                <button type="submit">{editingId ? 'Update' : 'Add'} Product</button>
-            </form>
-            <table className="w-full mt-4">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Shop</th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Note</th>
-                        <th>Description</th>
-                        <th>Position</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map((product) => (
-                        <tr key={product.id}>
-                            <td>{product.id}</td>
-                            <td>{product.shop_id}</td>
-                            <td>{product.ic_product_id}</td>
-                            <td>{product.price}</td>
-                            <td>{product.note}</td>
-                            <td>{product.desc}</td>
-                            <td>{product.position}</td>
-                            <td>
-                                <button onClick={() => handleEdit(product)}>Edit</button>
-                                <button onClick={() => handleDelete(product.id)} className="ml-2">Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <>
+        <div className={styles.container}>
+            <h1 className={styles.title}>Welcome to Admin Panel</h1>
+            <button className={styles.hrefButton} onClick={() => window.location.href = '/admin/icproduct'}>Common Product</button>
+            {/* Admin functionalities go here */}
         </div>
+        <div className={styles.container}>
+        <button className={styles.hrefButton} onClick={() => window.location.href = '/admin/shopproduct'}>Shop Product</button>
+        {/* Admin functionalities go here */}
+    </div></>
     );
 }

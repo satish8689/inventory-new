@@ -1,1 +1,50 @@
-self.__BUILD_MANIFEST={polyfillFiles:["static/chunks/polyfills-42372ed130431b0a.js"],devFiles:[],ampDevFiles:[],lowPriorityFiles:[],rootMainFiles:[],rootMainFilesTree:{},pages:{"/":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/pages/index-cd3b2305653c0b15.js"],"/_app":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/pages/_app-62ff9594266cbbd0.js"],"/_error":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/pages/_error-fde50cb7f1ab27e0.js"],"/admin":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/pages/admin-99a081ac7ed8cc44.js"],"/admin/icproduct":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/cb355538-8af2c7c4aeb2c7f9.js","static/css/3245e17e25e5c1d0.css","static/chunks/pages/admin/icproduct-c0d115766375174b.js"],"/admin/shop":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/cb355538-8af2c7c4aeb2c7f9.js","static/css/93e39847c7dc6034.css","static/chunks/pages/admin/shop-6c6812b9b6235d28.js"],"/admin/shopproduct":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/cb355538-8af2c7c4aeb2c7f9.js","static/css/f4d2c59709feaf7d.css","static/chunks/pages/admin/shopproduct-7d31bccd216853b2.js"],"/layout":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/chunks/pages/layout-c033ab87afbca69b.js"],"/products":["static/chunks/webpack-8cac0b4b405cede1.js","static/chunks/framework-a4ddb9b21624b39b.js","static/chunks/main-e5cda668ab60045f.js","static/css/ed9092e05ec826c9.css","static/chunks/pages/products-e40610be0cf35ba8.js"]},ampFirstPages:[]},self.__BUILD_MANIFEST.lowPriorityFiles=["/static/"+process.env.__NEXT_BUILD_ID+"/_buildManifest.js",,"/static/"+process.env.__NEXT_BUILD_ID+"/_ssgManifest.js"];
+self.__BUILD_MANIFEST = {
+  "polyfillFiles": [
+    "static/chunks/polyfills.js"
+  ],
+  "devFiles": [
+    "static/chunks/react-refresh.js"
+  ],
+  "ampDevFiles": [],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [],
+  "rootMainFilesTree": {},
+  "pages": {
+    "/_app": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_app.js"
+    ],
+    "/_error": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_error.js"
+    ],
+    "/admin": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/admin.js"
+    ],
+    "/admin/icproduct": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/admin/icproduct.js"
+    ],
+    "/admin/shopproduct": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/admin/shopproduct.js"
+    ],
+    "/products": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/products.js"
+    ]
+  },
+  "ampFirstPages": []
+};
+self.__BUILD_MANIFEST.lowPriorityFiles = [
+"/static/" + process.env.__NEXT_BUILD_ID + "/_buildManifest.js",
+,"/static/" + process.env.__NEXT_BUILD_ID + "/_ssgManifest.js",
+
+];
