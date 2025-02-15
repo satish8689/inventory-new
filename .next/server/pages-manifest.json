@@ -1,1 +1,7 @@
-{"/_app":"pages/_app.js","/_error":"pages/_error.js","/admin/icproduct":"pages/admin/icproduct.html","/admin":"pages/admin.html","/admin/shop":"pages/admin/shop.html","/admin/shopproduct":"pages/admin/shopproduct.html","/api/ic_product":"pages/api/ic_product.js","/api/products":"pages/api/products.js","/api/shop":"pages/api/shop.js","/api/shop_products":"pages/api/shop_products.js","/api/sshop":"pages/api/sshop.js","/":"pages/index.html","/layout":"pages/layout.html","/orderSummary.js":"pages/orderSummary.js.html","/products":"pages/products.html","/api/orders":"pages/api/orders.js","/_document":"pages/_document.js","/404":"pages/404.html"}
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js",
+  "/products": "pages/products.js"
+}
