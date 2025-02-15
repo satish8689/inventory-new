@@ -5,12 +5,16 @@ import { FaTrash, FaFilePdf, FaWhatsapp } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import styles from './orderSummary.module.scss';
-export default function OrderSummary({ selectedProducts, setSelectedProducts, goBack }) {
+
+export default function OrderSummary({ selectedProducts = [], setSelectedProducts, goBack }) {
     const [totalAmount, setTotalAmount] = useState(0);
 
     useEffect(() => {
-        // Calculate total amount
-        const total = selectedProducts.reduce((sum, product) => sum + product.proTotalPrice, 0);
+        if (!Array.isArray(selectedProducts)) {
+            setTotalAmount(0);
+            return;
+        }
+        const total = selectedProducts.reduce((sum, product) => sum + (product.proTotalPrice || 0), 0);
         setTotalAmount(total);
     }, [selectedProducts]);
 
@@ -21,16 +25,14 @@ export default function OrderSummary({ selectedProducts, setSelectedProducts, go
 
     const generateAndStorePDF = async () => {
         const doc = new jsPDF();
-        const storedUser = localStorage.getItem('userInfo');
-        // Dummy user and shop details
-        const userName = storedUser.name;
-        const userContact = storedUser.mobile;
+        const storedUser = JSON.parse(localStorage.getItem('userInfo')) || {};
+        const userName = storedUser.name || 'Unknown User';
+        const userContact = storedUser.mobile || 'Unknown Contact';
         const shopName = "Test Shop";
         const shopContact = "+91 1234567890";
 
-        // Header: User and Shop Details
         doc.setFontSize(16);
-        doc.text("Order Summary", 80, 10); // Centered title
+        doc.text("Order Summary", 80, 10);
 
         doc.setFontSize(12);
         doc.text(`Customer: ${userName}`, 14, 20);
@@ -39,29 +41,18 @@ export default function OrderSummary({ selectedProducts, setSelectedProducts, go
         doc.text(`Shop Contact: ${shopContact}`, 120, 30);
 
         let totalAmount = 0;
-        let totalQuantity = 0;
-        let totalProducts = selectedProducts.length; // Total product count
+        let totalProducts = selectedProducts.length;
 
         const tableData = selectedProducts.map((product, index) => {
-            let quantityNumber = parseFloat(product.quantity); // Extract numeric quantity
-            if (product.quantity.includes("g")) {
-                quantityNumber /= 1000; // Convert grams to kg
+            let quantityNumber = parseFloat(product.quantity) || 0;
+            if (product.quantity.includes("gm")) {
+                quantityNumber /= 1000;
             }
-
-            const totalPrice = quantityNumber * product.price;
+            const totalPrice = quantityNumber * (product.price || 0);
             totalAmount += totalPrice;
-            totalQuantity += quantityNumber;
-
-            return [
-                index + 1,
-                product.title,
-                product.quantity,
-                `Rs ${product.price}`,
-                `Rs ${totalPrice.toFixed(2)}`
-            ];
+            return [index + 1, product.title, product.quantity, `Rs ${product.price}`, `Rs ${totalPrice.toFixed(2)}`];
         });
 
-        // Generate Table with Proper Alignment
         doc.autoTable({
             head: [['#', 'Product', 'Quantity', 'Unit Price', 'Total Price']],
             body: [
@@ -113,13 +104,9 @@ export default function OrderSummary({ selectedProducts, setSelectedProducts, go
             ],
             startY: 40,
         });
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0'); // Ensures two-digit format
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-        const year = date.getFullYear();
-        const fileName = `${day}-${month}-${year}-Order-Summary.pdf`;
+        
+        const fileName = `${new Date().toLocaleDateString().replace(/\//g, '-')}-Order-Summary.pdf`;
         doc.save(fileName);
-
 
         //WhatsApp message with order details
         const whatsappMessage = encodeURIComponent(
@@ -129,9 +116,6 @@ export default function OrderSummary({ selectedProducts, setSelectedProducts, go
         // Open WhatsApp with the message
         window.open(`https://wa.me/+918602148689?text=${whatsappMessage}`, "_blank");
     };
-
-
-
 
     return (
         <div className={styles.container}>
@@ -148,7 +132,7 @@ export default function OrderSummary({ selectedProducts, setSelectedProducts, go
                             <p className={styles.productTitle}>{product.title}</p>
                             <p className={styles.quantity}>Qty: {product.quantity}</p>
                             <p className={styles.price}>Rs {product.price}</p>
-                            <p className={styles.totalPrice}>Rs {product.proTotalPrice.toFixed(2)}</p>
+                            <p className={styles.totalPrice}>Rs {(product.proTotalPrice || 0).toFixed(2)}</p>
                             <button onClick={() => handleRemove(product.id)} className={styles.removeButton}>
                                 <FaTrash />
                             </button>
@@ -157,7 +141,6 @@ export default function OrderSummary({ selectedProducts, setSelectedProducts, go
                 ) : <p>No products selected.</p>}
             </div>
 
-            {/* Fixed Footer for Total & PDF Button */}
             <footer className={styles.footer}>
                 <div className={styles.summary}>
                     <p><strong>Total Products:</strong> {selectedProducts.length}</p>
